@@ -131,7 +131,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 35756808}
-  - component: {fileID: 35756809}
   m_Layer: 0
   m_Name: UserManager
   m_TagString: Untagged
@@ -154,25 +153,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &35756809
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 35756807}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9f7f6f5608b82f408436bf8706e3e4e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  usernameInput: {fileID: 387412164}
-  nicknameInput: {fileID: 1346474881}
-  passwordInput: {fileID: 312518902}
-  confirmPasswordInput: {fileID: 1369287180}
-  signUpButton: {fileID: 1562350653}
-  testButton: {fileID: 0}
-  networkManager: {fileID: 1331252521}
 --- !u!1 &103348818
 GameObject:
   m_ObjectHideFlags: 0
@@ -1334,7 +1314,7 @@ GameObject:
   - component: {fileID: 490764152}
   - component: {fileID: 490764153}
   m_Layer: 0
-  m_Name: inputGridLogIn
+  m_Name: inputGridSignIn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1849,6 +1829,59 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 830425413}
   m_CullTransparentMesh: 1
+--- !u!1 &980208823
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 980208825}
+  - component: {fileID: 980208824}
+  m_Layer: 0
+  m_Name: AuthManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &980208824
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 980208823}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5752a40b933695f479f0b6afd9939111, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  usernameInput: {fileID: 387412164}
+  nicknameInput: {fileID: 1346474881}
+  passwordInput: {fileID: 312518902}
+  confirmPasswordInput: {fileID: 1369287180}
+  signUpButton: {fileID: 1562350653}
+  nicknameSignInInput: {fileID: 1028082061}
+  passwordSignInInput: {fileID: 1121474500}
+  signInButton: {fileID: 2013810150}
+  networkManager: {fileID: 1331252521}
+--- !u!4 &980208825
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 980208823}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 960, y: 540, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1025601450
 GameObject:
   m_ObjectHideFlags: 0
@@ -2650,7 +2683,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Log In
+  m_text: Sign In
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4251,7 +4284,7 @@ GameObject:
   - component: {fileID: 1805681523}
   - component: {fileID: 1805681525}
   m_Layer: 5
-  m_Name: panelLogIn
+  m_Name: panelSignIn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4644,7 +4677,7 @@ GameObject:
   - component: {fileID: 2013810151}
   - component: {fileID: 2013810150}
   m_Layer: 5
-  m_Name: buttonLogIn
+  m_Name: buttonSignIn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5052,3 +5085,4 @@ SceneRoots:
   - {fileID: 1331252522}
   - {fileID: 35756808}
   - {fileID: 1735117432}
+  - {fileID: 980208825}

@@ -44,6 +44,37 @@ public class NetworkManager : MonoBehaviour
         }
     }
 
+    public void PostRequest(string endPoint, string json, string authToken, System.Action<string> callback)
+    {
+        StartCoroutine(PostRequestCoroutine(endPoint, json, authToken, callback));
+    }
+
+    private IEnumerator PostRequestCoroutine(string endPoint, string json, string authToken, System.Action<string> callback)
+    {
+        StringBuilder urlBuilder = new StringBuilder(baseUrl).Append(endPoint);
+        string url = urlBuilder.ToString();
+        UnityWebRequest www = new UnityWebRequest(url, "POST");
+        byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(json);
+        www.uploadHandler = new UploadHandlerRaw(bodyRaw);
+        www.downloadHandler = new DownloadHandlerBuffer();
+        www.SetRequestHeader("Content-Type", "application/json");
+        www.SetRequestHeader("Authorization", "Bearer " + authToken); // 인증 토큰 추가
+
+        yield return www.SendWebRequest();
+
+        if (www.result != UnityWebRequest.Result.Success)
+        {
+            Debug.LogError("Error: " + www.error);
+            ToastManager.Instance.ShowToast("Error: " + www.error, MSG_TYPE.ERROR);
+            callback(null);
+        }
+        else
+        {
+            callback(www.downloadHandler.text);
+            ToastManager.Instance.ShowToast("Success: " + www.downloadHandler.text, MSG_TYPE.INFO);
+        }
+    }
+
 
     public void GetRequest(string endPoint, System.Action<string> callback)
     {
@@ -71,5 +102,37 @@ public class NetworkManager : MonoBehaviour
         }
     }
 
+    /*
+     
+         public void PostRequest(string endPoint, string json, System.Action<string> callback)
+    {
+        // POST 메서드 처리
+        StartCoroutine(PostRequestCoroutine(endPoint, json, callback));
+    }
 
+    private IEnumerator PostRequestCoroutine(string endPoint, string json, System.Action<string> callback)
+    {
+        // url: 기본 포트 + 앤드포인트로 지정
+        StringBuilder urlBuilder = new StringBuilder(baseUrl).Append(endPoint);
+        string url = urlBuilder.ToString();
+        // serialize 
+        UnityWebRequest www = new UnityWebRequest(url, "POST");
+        byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(json);
+        www.uploadHandler = new UploadHandlerRaw(bodyRaw);
+        www.downloadHandler = new DownloadHandlerBuffer();
+        www.SetRequestHeader("Content-Type", "application/json");
+        // 서버에 req 전송, res 대기
+        yield return www.SendWebRequest();
+        // res 처리 로직
+        if (www.result != UnityWebRequest.Result.Success)
+        {
+            callback(null);
+        }
+        else
+        {
+            callback(www.downloadHandler.text);
+        }
+    }
+     
+     */
 }
