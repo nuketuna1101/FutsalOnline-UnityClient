@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
+public enum MSG_TYPE
+{
+    INFO,
+    ERROR,
+}
+
 public class ToastManager : MonoBehaviour
 {
     public static ToastManager Instance;
@@ -25,14 +31,25 @@ public class ToastManager : MonoBehaviour
         }
     }
 
-    public void ShowToast(string message)
+    public void ShowToast(string message, MSG_TYPE msgType = MSG_TYPE.INFO)
     {
-        StartCoroutine(ShowToastCoroutine(message));
+        StartCoroutine(ShowToastCoroutine(message, msgType));
     }
 
-    private IEnumerator ShowToastCoroutine(string message)
+    private IEnumerator ShowToastCoroutine(string message, MSG_TYPE msgType = MSG_TYPE.INFO) 
     {
+        // 메시지와 메시지 유형 설정
         toastText.text = message;
+        switch (msgType)
+        {
+            case MSG_TYPE.INFO:
+                toastText.color = Color.yellow;
+                break;
+            case MSG_TYPE.ERROR:
+                toastText.color = Color.red;
+                break;
+        }
+
         canvasGroup.alpha = 1f; // 메시지 표시
         toastText.gameObject.SetActive(true);
 
