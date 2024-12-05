@@ -3,8 +3,8 @@ using System;
 [Serializable]
 public class SignUpDTO
 {
-    public string username;
-    public string userId;
+    public string userName;
+    public string nickname;
     public string password;
-    public string passwordConfirm;
+    public string confirmPassword;
 }
