@@ -13,6 +13,34 @@ using UnityEngine.Networking;
 public class NetworkManager : MonoBehaviour
 {
     const string baseUrl = "http://localhost:3321/api/";
+    private string authToken;
+
+    // 로그인 요청 메서드
+    public void Login(string nickname, string password)
+    {
+        // DTO 따라 JSON
+        SignInDTO signInData = new SignInDTO
+        {
+            nickname = nickname,
+            password = password,
+        };
+
+        string json = JsonUtility.ToJson(signInData);
+        StartCoroutine(PostRequestCoroutine("users/sign-in", json, (response) => {
+            if (response != null)
+            {
+                // 로그인 성공 시 토큰 저장
+                var jsonResponse = JsonUtility.FromJson<AuthResponse>(response);
+                authToken = jsonResponse.token;
+                ToastManager.Instance.ShowToast("Login successful!", MSG_TYPE.INFO);
+            }
+            else
+            {
+                ToastManager.Instance.ShowToast("Login failed!", MSG_TYPE.ERROR);
+            }
+        }));
+    }
+
 
     public void PostRequest(string endPoint, string json, System.Action<string> callback)
     {

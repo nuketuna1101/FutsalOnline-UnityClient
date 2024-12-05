@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Networking;
 using System.Net;
+using System;
 /// <summary>
 /// AuthManager : 유저 회원 가입, 로그인 로직 처리
 /// </summary>
@@ -75,14 +76,17 @@ public class AuthManager : MonoBehaviour
     private IEnumerator SignInCoroutine()
     {
         // inputfield 값 가져오기
-        string nickname = nicknameInput.text;
-        string password = passwordInput.text;
+        string nickname = nicknameSignInInput.text;
+        string password = passwordSignInInput.text;
+        //networkManager.Login(nickname, password);
+        
         // DTO 따라 JSON
         SignInDTO signInData = new SignInDTO
         {
-            nickname = nicknameInput.text,
-            password = passwordInput.text,
+            nickname = nickname,
+            password = password,
         };
+
         string json = JsonUtility.ToJson(signInData);
         string endPoint = "users/sign-in";
 
@@ -95,12 +99,12 @@ public class AuthManager : MonoBehaviour
             }
             else
             {
-                string msg = "[Success] :: Sign-in completed.";
+                string msg = "[Success] :: " + UtilHelper.GetMessageFromResponse(response);
                 Debug.Log(msg);
-                ToastManager.Instance.ShowToast(msg);
+                ToastManager.Instance.ShowToast(msg + response);
             }
         });
-
+        
         yield return null;
     }
 
