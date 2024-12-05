@@ -15,7 +15,7 @@ public class ToastManager : MonoBehaviour
 
     public TextMeshProUGUI toastText;
     public CanvasGroup canvasGroup;
-    public float duration = 2f; // 토스트 메시지 표시 시간 (초)
+    public float duration = 2f;
 
     private void Awake()
     {
@@ -48,14 +48,17 @@ public class ToastManager : MonoBehaviour
             case MSG_TYPE.ERROR:
                 toastText.color = Color.red;
                 break;
+            default:
+                toastText.color = Color.yellow;
+                break;
         }
-
-        canvasGroup.alpha = 1f; // 메시지 표시
+        // 메시지 표시
+        canvasGroup.alpha = 1f; 
         toastText.gameObject.SetActive(true);
-
-        yield return new WaitForSeconds(duration); // 메시지 표시 시간 대기
-
-        for (float t = 0; t < 1f; t += Time.deltaTime / 0.5f) // 페이드 아웃 시간
+        // 메시지 표시 시간 대기
+        yield return new WaitForSeconds(duration);
+        // 페이드 아웃 시간
+        for (float t = 0; t < 1f; t += Time.deltaTime / 0.5f) 
         {
             canvasGroup.alpha = 1f - t;
             yield return null;

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Networking;
+using System.Net;
 /// <summary>
 /// UserManager : 유저 회원 가입, 로그인 로직 처리
 /// </summary>
@@ -15,13 +16,13 @@ public class UserManager : MonoBehaviour
     public TMP_InputField passwordInput;
     public TMP_InputField confirmPasswordInput;
     public Button signUpButton;
-    public Button testButton;
     public NetworkManager networkManager;
+    private bool isServerRunning = false;
 
     void Start()
     {
         signUpButton.onClick.AddListener(() => StartCoroutine(SignUpCoroutine()));
-        testButton.onClick.AddListener(() => StartCoroutine(TestCoroutine()));
+        PingTest();
     }
 
     private IEnumerator SignUpCoroutine()
@@ -31,10 +32,6 @@ public class UserManager : MonoBehaviour
         string nickname = nicknameInput.text;
         string password = passwordInput.text;
         string confirmPassword = confirmPasswordInput.text;
-        Debug.Log("username : " + username);
-        Debug.Log("userId : " + nickname);
-        Debug.Log("password : " + password);
-        Debug.Log("passwordConfirm : " + confirmPassword);
         // DTO 따라 JSON
         SignUpDTO signUpData = new SignUpDTO
         {
@@ -49,22 +46,38 @@ public class UserManager : MonoBehaviour
         networkManager.PostRequest(endPoint, json, (response) => {
             if (response == null)
             {
-                Debug.LogError("Sign-up failed.");
+                string msg = "[Error] :: Sign-up failed.";
+                Debug.LogError(msg);
+                ToastManager.Instance.ShowToast(msg, MSG_TYPE.ERROR);
             }
             else
             {
-                Debug.Log("Sign-up successful: " + response);
+                string msg = "[Success] :: Sign-up completed.";
+                Debug.Log(msg);
+                ToastManager.Instance.ShowToast(msg);
             }
         });
 
         yield return null;
     }
 
-    private IEnumerator TestCoroutine()
+    private void PingTest()
     {
-        // inputfield 값 가져오기
-        ToastManager.Instance.ShowToast("Test: test text" );
-        yield return null;
+        // 핑 테스트
+        networkManager.GetRequest("ping", (response) => {
+            if (response == null)
+            {
+                string msg = "[Ping failed] :: Server NOT running.";
+                Debug.Log(msg);
+                ToastManager.Instance.ShowToast(msg, MSG_TYPE.ERROR);
+            }
+            else
+            {
+                string msg = "[Ping Test] Server is running!";
+                Debug.Log(msg);
+                ToastManager.Instance.ShowToast(msg);
+            }
+        });
     }
 }
 

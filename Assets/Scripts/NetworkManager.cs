@@ -14,28 +14,6 @@ public class NetworkManager : MonoBehaviour
 {
     const string baseUrl = "http://localhost:3321/api/";
 
-    public void PingTest()
-    {
-        StartCoroutine(PingTestCoroutine());
-    }
-
-    private IEnumerator PingTestCoroutine()
-    {
-        // url: 기본 포트 + ping
-        StringBuilder urlBuilder = new StringBuilder(baseUrl).Append("ping");
-        string url = urlBuilder.ToString();
-        UnityWebRequest www = UnityWebRequest.Get(url);
-        yield return www.SendWebRequest();
-        if (www.result != UnityWebRequest.Result.Success)
-        {
-            Debug.LogError("Ping failed: " + www.error);
-        }
-        else
-        {
-            Debug.Log("Ping successful: " + www.downloadHandler.text);
-        }
-    }
-
     public void PostRequest(string endPoint, string json, System.Action<string> callback)
     {
         // POST 메서드 처리
@@ -58,14 +36,40 @@ public class NetworkManager : MonoBehaviour
         // res 처리 로직
         if (www.result != UnityWebRequest.Result.Success)
         {
-            Debug.LogError("Error: " + www.error);
-            ToastManager.Instance.ShowToast("Error: " + www.error);
             callback(null);
         }
         else
         {
             callback(www.downloadHandler.text);
-            ToastManager.Instance.ShowToast("Success: " + www.downloadHandler.text);
         }
     }
+
+
+    public void GetRequest(string endPoint, System.Action<string> callback)
+    {
+        StartCoroutine(GetRequestCoroutine(endPoint, callback));
+    }
+
+    private IEnumerator GetRequestCoroutine(string endPoint, System.Action<string> callback)
+    {
+        // url: 기본 포트 + 앤드포인트로 지정
+        StringBuilder urlBuilder = new StringBuilder(baseUrl).Append(endPoint);
+        string url = urlBuilder.ToString();
+
+        // GET 요청 생성
+        UnityWebRequest www = UnityWebRequest.Get(url);
+        yield return www.SendWebRequest();
+
+        // res 처리 로직
+        if (www.result != UnityWebRequest.Result.Success)
+        {
+            callback(null);
+        }
+        else
+        {
+            callback(www.downloadHandler.text);
+        }
+    }
+
+
 }
