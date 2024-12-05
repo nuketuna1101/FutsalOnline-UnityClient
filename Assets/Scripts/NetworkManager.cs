@@ -12,7 +12,7 @@ using UnityEngine.Networking;
 
 public class NetworkManager : MonoBehaviour
 {
-    const string baseUrl = "http://localhost:3019/api/";
+    const string baseUrl = "http://localhost:3321/api/";
 
     public void PingTest()
     {
