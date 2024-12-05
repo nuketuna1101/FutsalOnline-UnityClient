@@ -59,11 +59,13 @@ public class NetworkManager : MonoBehaviour
         if (www.result != UnityWebRequest.Result.Success)
         {
             Debug.LogError("Error: " + www.error);
+            ToastManager.Instance.ShowToast("Error: " + www.error);
             callback(null);
         }
         else
         {
             callback(www.downloadHandler.text);
+            ToastManager.Instance.ShowToast("Success: " + www.downloadHandler.text);
         }
     }
 }
