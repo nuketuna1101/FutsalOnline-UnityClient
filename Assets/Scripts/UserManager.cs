@@ -11,35 +11,40 @@ using UnityEngine.Networking;
 public class UserManager : MonoBehaviour
 {
     public TMP_InputField usernameInput;
-    public TMP_InputField userIdInput;
+    public TMP_InputField nicknameInput;
     public TMP_InputField passwordInput;
-    public TMP_InputField passwordConfirmInput;
+    public TMP_InputField confirmPasswordInput;
     public Button signUpButton;
+    public Button testButton;
     public NetworkManager networkManager;
 
     void Start()
     {
         signUpButton.onClick.AddListener(() => StartCoroutine(SignUpCoroutine()));
+        testButton.onClick.AddListener(() => StartCoroutine(TestCoroutine()));
     }
 
     private IEnumerator SignUpCoroutine()
     {
         // inputfield 값 가져오기
         string username = usernameInput.text;
-        string userId = userIdInput.text;
+        string nickname = nicknameInput.text;
         string password = passwordInput.text;
-        string passwordConfirm = passwordConfirmInput.text;
-        
+        string confirmPassword = confirmPasswordInput.text;
+        Debug.Log("username : " + username);
+        Debug.Log("userId : " + nickname);
+        Debug.Log("password : " + password);
+        Debug.Log("passwordConfirm : " + confirmPassword);
         // DTO 따라 JSON
         SignUpDTO signUpData = new SignUpDTO
         {
-            username = usernameInput.text,
-            userId = userIdInput.text,
+            userName = usernameInput.text,
+            nickname = nicknameInput.text,
             password = passwordInput.text,
-            passwordConfirm = passwordConfirmInput.text
+            confirmPassword = confirmPasswordInput.text
         };
         string json = JsonUtility.ToJson(signUpData);
-        string endPoint = "sign-up";
+        string endPoint = "users/sign-up";
 
         networkManager.PostRequest(endPoint, json, (response) => {
             if (response == null)
@@ -52,6 +57,13 @@ public class UserManager : MonoBehaviour
             }
         });
 
+        yield return null;
+    }
+
+    private IEnumerator TestCoroutine()
+    {
+        // inputfield 값 가져오기
+        ToastManager.Instance.ShowToast("Test: test text" );
         yield return null;
     }
 }
