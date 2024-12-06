@@ -25,15 +25,17 @@ public class AuthManager : MonoBehaviour
     public TMP_InputField passwordSignInInput;
     public Button signInButton;
 
-
-    public NetworkManager networkManager;
+    [Header("Ping")]
     private bool isServerRunning = false;
+    private bool hasShownAliveToast = false; // "Server is running" 토스트를 최초 1회만 표시
+    [SerializeField]
+    private float pingInterval = 5f; // 핑 테스트 간격 (초 단위)
 
     void Start()
     {
         signUpButton.onClick.AddListener(() => StartCoroutine(SignUpCoroutine()));
         signInButton.onClick.AddListener(() => StartCoroutine(SignInCoroutine()));
-        PingTest();
+        StartCoroutine(PingTestCoroutine());
     }
 
     private IEnumerator SignUpCoroutine()
@@ -54,7 +56,7 @@ public class AuthManager : MonoBehaviour
         string json = JsonUtility.ToJson(signUpData);
         string endPoint = "users/sign-up";
 
-        networkManager.PostRequest(endPoint, json, (response) => {
+        NetworkManager.Instance.PostRequest(endPoint, json, (response) => {
             if (response == null)
             {
                 string msg = "[Error] :: Sign-up failed.";
@@ -78,7 +80,6 @@ public class AuthManager : MonoBehaviour
         // inputfield 값 가져오기
         string nickname = nicknameSignInInput.text;
         string password = passwordSignInInput.text;
-        //networkManager.Login(nickname, password);
         
         // DTO 따라 JSON
         SignInDTO signInData = new SignInDTO
@@ -90,7 +91,7 @@ public class AuthManager : MonoBehaviour
         string json = JsonUtility.ToJson(signInData);
         string endPoint = "users/sign-in";
 
-        networkManager.PostRequest(endPoint, json, (response) => {
+        NetworkManager.Instance.PostRequest(endPoint, json, (response) => {
             if (response == null)
             {
                 string msg = "[Error] :: Sign-in failed.";
@@ -99,30 +100,52 @@ public class AuthManager : MonoBehaviour
             }
             else
             {
-                string msg = "[Success] :: " + UtilHelper.GetMessageFromResponse(response);
+                string msg = "[Success] :: Sign-in completed" + UtilHelper.GetMessageFromResponse(response);
                 Debug.Log(msg);
-                ToastManager.Instance.ShowToast(msg + response);
+                ToastManager.Instance.ShowToast(msg);
             }
         });
         
         yield return null;
     }
 
+
+    private IEnumerator PingTestCoroutine()
+    {
+        while (true)
+        {
+            // 인터벌만큼 주기적 반복
+            PingTest();
+            yield return new WaitForSeconds(pingInterval);
+        }
+    }
+
     private void PingTest()
     {
         // 핑 테스트
-        networkManager.GetRequest("ping", (response) => {
+        NetworkManager.Instance.GetRequest("ping", (response) => {
+            // 핑 실패
             if (response == null)
             {
+                if (!isServerRunning) return;
+
+                isServerRunning = false; 
+                hasShownAliveToast = false;
                 string msg = "[Ping failed] :: Server NOT running.";
                 Debug.Log(msg);
                 ToastManager.Instance.ShowToast(msg, MSG_TYPE.ERROR);
             }
+            // 핑 성공
             else
             {
+                if (!isServerRunning) isServerRunning = true;
+                // 최초 1회만 보여주기 위해
+                if (hasShownAliveToast) return;
+                hasShownAliveToast = true;
                 string msg = "[Ping Test] Server is running!";
                 Debug.Log(msg);
                 ToastManager.Instance.ShowToast(msg);
+
             }
         });
     }
