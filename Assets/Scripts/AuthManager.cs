@@ -6,6 +6,8 @@ using TMPro;
 using UnityEngine.Networking;
 using System.Net;
 using System;
+using System.Transactions;
+using UnityEngine.SceneManagement;
 /// <summary>
 /// AuthManager : 유저 회원 가입, 로그인 로직 처리
 /// </summary>
@@ -13,6 +15,7 @@ using System;
 
 public class AuthManager : MonoBehaviour
 {
+    public TransitionManager transitionManager;  // TransitionManager 할당
     [Header("SignUp")]
     public TMP_InputField usernameInput;
     public TMP_InputField nicknameInput;
@@ -100,12 +103,27 @@ public class AuthManager : MonoBehaviour
             }
             else
             {
-                string msg = "[Success] :: Sign-in completed" + UtilHelper.GetMessageFromResponse(response);
+                // 서버 응답 처리
+                SignInResponse signInResponse = JsonUtility.FromJson<SignInResponse>(response);
+
+                // 서버에서 닉네임을 반환한 경우 파싱
+                string receivedNickname = signInResponse.nickname ?? nickname;
+
+                // 환영 메시지 표시
+                string msg = $"[Success] :: Welcome, {receivedNickname}!";
                 Debug.Log(msg);
                 ToastManager.Instance.ShowToast(msg);
+                StartCoroutine(AfterSignInCoroutine());
             }
         });
         
+        yield return null;
+    }
+    private IEnumerator AfterSignInCoroutine()
+    {
+        yield return new WaitForSeconds(1.0f);
+        transitionManager.TransitionToScene("1.UserLobby");
+        //SceneManager.LoadScene("1.UserLobby");
         yield return null;
     }
 
