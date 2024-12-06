@@ -16,6 +16,10 @@ public class UserManager : MonoBehaviour
     public string UserId { get; private set; }
     public string UserNickname { get; private set; }
     public string AccessToken { get; private set; }
+    public int Rating { get; private set; }
+    public int Rank { get; private set; }
+    public int Cash { get; private set; }
+
     public bool IsLoggedIn { get; private set; }
 
     private void Awake()
@@ -46,5 +50,15 @@ public class UserManager : MonoBehaviour
         UserNickname = null;
         AccessToken = null;
         IsLoggedIn = false;
+    }
+
+    public void GetUserCash()
+    {
+        // 서버에 get 리퀘스트로 업데이트
+    }
+
+    public void GetUserRatingandRank()
+    {
+        // 서버에 get 리퀘스트로 업데이트
     }
 }

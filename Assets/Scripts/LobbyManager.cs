@@ -14,6 +14,11 @@ public class LobbyManager : MonoBehaviour
     public TransitionManager transitionManager;  // TransitionManager 할당
     [Header("Gatcha")]
     public Button gatchaButton;
+    [Header("Lobby User Data Display")]
+    public TextMeshProUGUI textUserNickname;
+    public TextMeshProUGUI textRating;
+    public TextMeshProUGUI textRank;
+
 
     void Start()
     {
@@ -22,12 +27,6 @@ public class LobbyManager : MonoBehaviour
             gatchaButton.onClick.AddListener(() => StartCoroutine(GatchaCoroutine()));
         else
             Debug.Log("Gatcha Button is not assigned in the Inspector!");
-        /*
-        if ( != null)
-            .onClick.AddListener(() => StartCoroutine(SignInCoroutine()));
-        else
-            Debug.Log("SignIn Button is not assigned in the Inspector!");
-        */
 
     }
 
@@ -64,6 +63,29 @@ public class LobbyManager : MonoBehaviour
         });
 
         yield return null;
+    }
+
+
+    private void Update()
+    {
+        UpdateUserDataDisplay();
+    }
+
+    private void UpdateUserDataDisplay()
+    {
+        // 유저 데이터 업데이트
+        if (UserManager.Instance.IsLoggedIn)
+        {
+            textUserNickname.text = UserManager.Instance.UserNickname;
+            textRating.text = "Rating: " + UserManager.Instance.Rating.ToString();
+            textRank.text = "Rank: " + UserManager.Instance.Rating;
+        }
+        else
+        {
+            textUserNickname.text = "Guest";
+            textRating.text = "Rating: N/A";
+            textRank.text = "Rank: N/A";
+        }
     }
 
 
