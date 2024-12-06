@@ -36,8 +36,16 @@ public class AuthManager : MonoBehaviour
 
     void Start()
     {
-        signUpButton.onClick.AddListener(() => StartCoroutine(SignUpCoroutine()));
-        signInButton.onClick.AddListener(() => StartCoroutine(SignInCoroutine()));
+        if (signUpButton != null)
+            signUpButton.onClick.AddListener(() => StartCoroutine(SignUpCoroutine()));
+        else
+            Debug.Log("SignUp Button is not assigned in the Inspector!");
+
+        if (signInButton != null)
+            signInButton.onClick.AddListener(() => StartCoroutine(SignInCoroutine()));
+        else
+            Debug.Log("SignIn Button is not assigned in the Inspector!");
+
         StartCoroutine(PingTestCoroutine());
     }
 

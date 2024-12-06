@@ -29,32 +29,6 @@ public class NetworkManager : MonoBehaviour
         DontDestroyOnLoad(gameObject); // 씬 전환 시에도 파괴되지 않도록 설정
     }
 
-    // 로그인 요청 메서드
-    public void Login(string nickname, string password)
-    {
-        // DTO 따라 JSON
-        SignInDTO signInData = new SignInDTO
-        {
-            nickname = nickname,
-            password = password,
-        };
-
-        string json = JsonUtility.ToJson(signInData);
-        StartCoroutine(PostRequestCoroutine("users/sign-in", json, (response) => {
-            if (response != null)
-            {
-                // 로그인 성공 시 토큰 저장
-                var jsonResponse = JsonUtility.FromJson<AuthResponse>(response);
-                authToken = jsonResponse.token;
-                ToastManager.Instance.ShowToast("Login successful!", MSG_TYPE.INFO);
-            }
-            else
-            {
-                ToastManager.Instance.ShowToast("Login failed!", MSG_TYPE.ERROR);
-            }
-        }));
-    }
-
 
     public void PostRequest(string endPoint, string json, System.Action<string> callback)
     {
@@ -143,38 +117,4 @@ public class NetworkManager : MonoBehaviour
             callback(www.downloadHandler.text);
         }
     }
-
-    /*
-     
-         public void PostRequest(string endPoint, string json, System.Action<string> callback)
-    {
-        // POST 메서드 처리
-        StartCoroutine(PostRequestCoroutine(endPoint, json, callback));
-    }
-
-    private IEnumerator PostRequestCoroutine(string endPoint, string json, System.Action<string> callback)
-    {
-        // url: 기본 포트 + 앤드포인트로 지정
-        StringBuilder urlBuilder = new StringBuilder(baseUrl).Append(endPoint);
-        string url = urlBuilder.ToString();
-        // serialize 
-        UnityWebRequest www = new UnityWebRequest(url, "POST");
-        byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(json);
-        www.uploadHandler = new UploadHandlerRaw(bodyRaw);
-        www.downloadHandler = new DownloadHandlerBuffer();
-        www.SetRequestHeader("Content-Type", "application/json");
-        // 서버에 req 전송, res 대기
-        yield return www.SendWebRequest();
-        // res 처리 로직
-        if (www.result != UnityWebRequest.Result.Success)
-        {
-            callback(null);
-        }
-        else
-        {
-            callback(www.downloadHandler.text);
-        }
-    }
-     
-     */
 }
