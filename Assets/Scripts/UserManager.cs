@@ -35,7 +35,6 @@ public class UserManager : MonoBehaviour
         }
     }
 
-
     public void SetUserData(string userId, string userNickname, string accessToken)
     {
         UserId = userId;
@@ -52,6 +51,12 @@ public class UserManager : MonoBehaviour
         IsLoggedIn = false;
     }
 
+    public void RefreshData()
+    {
+        // refresh 버튼으로 누르기
+        GetUserRatingandRank();
+    }
+
     public void GetUserCash()
     {
         // 서버에 get 리퀘스트로 업데이트
@@ -60,5 +65,36 @@ public class UserManager : MonoBehaviour
     public void GetUserRatingandRank()
     {
         // 서버에 get 리퀘스트로 업데이트
+        StartCoroutine(GetUserRatingAndRankCoroutine());
+    }
+
+
+    private IEnumerator GetUserRatingAndRankCoroutine()
+    {
+        string endPoint = "users/ranks/" + UserId;
+
+        NetworkManager.Instance.GetRequest(endPoint, (response) => {
+            // 실패
+            if (response == null)
+            {
+                string msg = "[Error] :: get ranks failed.";
+                Debug.LogError(msg);
+                ToastManager.Instance.ShowToast(msg, MSG_TYPE.ERROR);
+            }
+            // 조회 성공
+            else
+            {
+                // 서버 응답 처리
+                RankResponse rankResponse = JsonUtility.FromJson<RankResponse>(response);
+                // 서버에서 닉네임을 반환한 경우 파싱
+                string message = rankResponse.message;
+                int userRank = rankResponse.userRank;
+                int userRating = rankResponse.userRating;
+                Debug.Log(message + userRank + userRating);
+                Rating = userRating;
+                Rank = userRank;
+            }
+        });
+        yield return null;
     }
 }

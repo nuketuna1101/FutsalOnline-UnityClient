@@ -8,7 +8,7 @@ using DG.Tweening;
 public class TransitionManager : MonoBehaviour
 {
     public CanvasGroup fadeCanvasGroup;
-    public float fadeDuration = 1f;
+    public float fadeDuration = 0.5f;
 
     private void Start()
     {

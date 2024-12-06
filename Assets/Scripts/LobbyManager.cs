@@ -12,6 +12,8 @@ using UnityEngine.UI;
 public class LobbyManager : MonoBehaviour
 {
     public TransitionManager transitionManager;  // TransitionManager 할당
+    [Header("Refresh")]
+    public Button refreshButton;
     [Header("Gatcha")]
     public Button gatchaButton;
     [Header("Lobby User Data Display")]
@@ -22,12 +24,24 @@ public class LobbyManager : MonoBehaviour
 
     void Start()
     {
+        if (refreshButton != null)
+            refreshButton.onClick.AddListener(() => StartCoroutine(RefreshCoroutine()));
+        else
+            Debug.Log("Refresh Button is not assigned in the Inspector!");
+
 
         if (gatchaButton != null)
             gatchaButton.onClick.AddListener(() => StartCoroutine(GatchaCoroutine()));
         else
             Debug.Log("Gatcha Button is not assigned in the Inspector!");
 
+        // 최초에 리프레시
+        UserManager.Instance.RefreshData();
+    }
+    private IEnumerator RefreshCoroutine()
+    {
+        UserManager.Instance.RefreshData();
+        yield return null;
     }
 
     private IEnumerator GatchaCoroutine()
@@ -78,7 +92,7 @@ public class LobbyManager : MonoBehaviour
         {
             textUserNickname.text = UserManager.Instance.UserNickname;
             textRating.text = "Rating: " + UserManager.Instance.Rating.ToString();
-            textRank.text = "Rank: " + UserManager.Instance.Rating;
+            textRank.text = "Rank: " + UserManager.Instance.Rank.ToString();
         }
         else
         {
