@@ -108,9 +108,13 @@ public class AuthManager : MonoBehaviour
 
                 // 서버에서 닉네임을 반환한 경우 파싱
                 string receivedNickname = signInResponse.nickname ?? nickname;
+                string receivedUserId = signInResponse.userId ?? "NO_ID";
+                string accessToken = signInResponse.accessToken;  // 토큰 받기
 
                 // 환영 메시지 표시
                 string msg = $"[Success] :: Welcome, {receivedNickname}!";
+                // 유저 로그인 저장
+                UserManager.Instance.SetUserData(receivedUserId, receivedNickname, accessToken);
                 Debug.Log(msg);
                 ToastManager.Instance.ShowToast(msg);
                 StartCoroutine(AfterSignInCoroutine());

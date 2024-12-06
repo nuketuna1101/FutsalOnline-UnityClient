@@ -7,4 +7,7 @@ public class SignInResponse
 {
     public string Message;
     public string nickname;
+    public string userId;
+    public string accessToken;
+
 }

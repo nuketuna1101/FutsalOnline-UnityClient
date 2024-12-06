@@ -14,7 +14,8 @@ public class UserManager : MonoBehaviour
     public static UserManager Instance { get; private set; }
 
     public string UserId { get; private set; }
-    public string AuthToken { get; private set; }
+    public string UserNickname { get; private set; }
+    public string AccessToken { get; private set; }
     public bool IsLoggedIn { get; private set; }
 
     private void Awake()
@@ -31,17 +32,19 @@ public class UserManager : MonoBehaviour
     }
 
 
-    public void SetUserData(string userId, string authToken)
+    public void SetUserData(string userId, string userNickname, string accessToken)
     {
         UserId = userId;
-        AuthToken = authToken;
+        UserNickname = userNickname;
+        AccessToken = accessToken;
         IsLoggedIn = true;
     }
 
     public void ClearUserData()
     {
         UserId = null;
-        AuthToken = null;
+        UserNickname = null;
+        AccessToken = null;
         IsLoggedIn = false;
     }
 }
