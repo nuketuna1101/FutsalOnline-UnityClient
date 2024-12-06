@@ -1,13 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.Networking;
-using System.Net;
-using System;
-using System.Transactions;
-using UnityEngine.SceneManagement;
 /// <summary>
 /// AuthManager : 유저 회원 가입, 로그인 로직 처리
 /// </summary>

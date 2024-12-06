@@ -1,10 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
-using UnityEngine.Networking;
-using System.Net;
+
 /// <summary>
 /// UserManager : 유저 상태, 토큰 관리
 /// </summary>
