@@ -14,6 +14,20 @@ public class NetworkManager : MonoBehaviour
 {
     const string baseUrl = "http://localhost:3321/api/";
     private string authToken;
+    public static NetworkManager Instance { get; private set; }
+
+    private void Awake()
+    {
+        // 싱글턴 패턴 적용
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject); // 기존 인스턴스가 있으면 삭제
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject); // 씬 전환 시에도 파괴되지 않도록 설정
+    }
 
     // 로그인 요청 메서드
     public void Login(string nickname, string password)
