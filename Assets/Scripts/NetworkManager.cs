@@ -76,7 +76,8 @@ public class NetworkManager : MonoBehaviour
         www.uploadHandler = new UploadHandlerRaw(bodyRaw);
         www.downloadHandler = new DownloadHandlerBuffer();
         www.SetRequestHeader("Content-Type", "application/json");
-        www.SetRequestHeader("Authorization", "Bearer " + authToken); // 인증 토큰 추가
+        // 인증 토큰의 추가
+        www.SetRequestHeader("Authorization", "Bearer " + authToken);
 
         yield return www.SendWebRequest();
 
@@ -109,6 +110,40 @@ public class NetworkManager : MonoBehaviour
 
         // GET 요청 생성
         UnityWebRequest www = UnityWebRequest.Get(url);
+        yield return www.SendWebRequest();
+
+        // res 처리 로직
+        if (www.result != UnityWebRequest.Result.Success)
+        {
+            callback(null);
+        }
+        else
+        {
+            callback(www.downloadHandler.text);
+        }
+    }
+
+
+    public void GetRequest(string endPoint, string authToken, System.Action<string> callback)
+    {
+        StartCoroutine(GetRequestCoroutine(endPoint, authToken, callback));
+    }
+
+    private IEnumerator GetRequestCoroutine(string endPoint, string authToken, System.Action<string> callback)
+    {
+        // url: 기본 포트 + 앤드포인트로 지정
+        StringBuilder urlBuilder = new StringBuilder(baseUrl).Append(endPoint);
+        string url = urlBuilder.ToString();
+
+        // GET 요청 생성
+        UnityWebRequest www = UnityWebRequest.Get(url);
+
+        // 인증 헤더 추가
+        if (!string.IsNullOrEmpty(authToken))
+        {
+            www.SetRequestHeader("Authorization", $"Bearer {authToken}");
+        }
+
         yield return www.SendWebRequest();
 
         // res 처리 로직
