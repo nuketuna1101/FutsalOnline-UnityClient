@@ -56,7 +56,9 @@ public class NetworkManager : MonoBehaviour
         }
         else
         {
-            callback(www.downloadHandler.text);
+            // 응답 데이터가 UTF-8로 인코딩되어 제대로 처리되도록 변환
+            string responseString = System.Text.Encoding.UTF8.GetString(www.downloadHandler.data);
+            callback(responseString);
         }
     }
 
@@ -86,8 +88,10 @@ public class NetworkManager : MonoBehaviour
         }
         else
         {
-            callback(www.downloadHandler.text);
-            ToastManager.Instance.ShowToast("Success: " + www.downloadHandler.text, MSG_TYPE.INFO);
+            // 응답 데이터가 UTF-8로 인코딩되어 제대로 처리되도록 변환
+            string responseString = System.Text.Encoding.UTF8.GetString(www.downloadHandler.data);
+            callback(responseString);
+            ToastManager.Instance.ShowToast("Success: " + responseString, MSG_TYPE.INFO);
         }
     }
 
