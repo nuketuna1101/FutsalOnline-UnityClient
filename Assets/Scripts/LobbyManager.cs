@@ -21,6 +21,8 @@ public class LobbyManager : MonoBehaviour
     public Button squadButton;
     [Header("Gatcha")]
     public Button gatchaButton;
+    [Header("MatchMaking")]
+    public Button matchMakingButton;
     [Header("Lobby User Data Display")]
     public TextMeshProUGUI textUserNickname;
     public TextMeshProUGUI textRating;
@@ -49,6 +51,8 @@ public class LobbyManager : MonoBehaviour
         if (squadButton != null)
             squadButton.onClick.AddListener(() => StartCoroutine(SquadCoroutine()));
 
+        if (matchMakingButton != null)
+            matchMakingButton.onClick.AddListener(() => StartCoroutine(MatchMakingCoroutine()));
         // 최초에 리프레시
         UserManager.Instance.RefreshData();
     }
@@ -161,7 +165,58 @@ public class LobbyManager : MonoBehaviour
 
     }
 
+    private IEnumerator MatchMakingCoroutine()
+    {
+        // inputfield 값 가져오기
+        string json = "{}";
+        string endPoint = "matches";
 
+        if (!gobjPopup.activeSelf) gobjPopup.SetActive(true);
+
+        NetworkManager.Instance.PostRequest(endPoint, json, UserManager.Instance.AccessToken, (response) => {
+            if (response == null)
+            {
+                string msg = "[Error] :: random match making failed.";
+                Debug.LogError(msg);
+                ToastManager.Instance.ShowToast(msg, MSG_TYPE.ERROR);
+            }
+            else
+            {
+                // 성공한 경우 - 응답 처리
+                try
+                {
+                    MatchMakingResponse matchResponse = JsonUtility.FromJson<MatchMakingResponse>(response);
+
+                    if (matchResponse != null)
+                    {
+                        // 결과 메시지 생성
+                        string resultMessage = $"Match Result: {matchResponse.matchResult.message}\n" +
+                                               $"User ID: {matchResponse.user.userId}\n" +
+                                               $"New User Rating: {matchResponse.user.userNewRating}\n";
+
+                        // 디버그 로그 출력
+                        Debug.Log(resultMessage);
+                        ToastManager.Instance.ShowToast("[Success] :: match making completed.");
+                        textScrollViewPopup.text = resultMessage;
+                    }
+                    else
+                    {
+                        Debug.LogError("[Error] :: Failed to parse match response.");
+                        ToastManager.Instance.ShowToast("[Error] :: Failed to parse match response.", MSG_TYPE.ERROR);
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    // 응답 파싱 오류 처리
+                    Debug.LogError("[Error] :: Failed to parse response. " + ex.Message);
+                    ToastManager.Instance.ShowToast("[Error] :: Failed to parse response.", MSG_TYPE.ERROR);
+                }
+            }
+        });
+
+        yield return null;
+
+    }
 
 
     private void Update()

@@ -84,7 +84,6 @@ public class NetworkManager : MonoBehaviour
         if (www.result != UnityWebRequest.Result.Success)
         {
             Debug.LogError("Error: " + www.error);
-            ToastManager.Instance.ShowToast("Error: " + www.error, MSG_TYPE.ERROR);
             callback(null);
         }
         else
@@ -92,7 +91,6 @@ public class NetworkManager : MonoBehaviour
             // 응답 데이터가 UTF-8로 인코딩되어 제대로 처리되도록 변환
             string responseString = System.Text.Encoding.UTF8.GetString(www.downloadHandler.data);
             callback(responseString);
-            ToastManager.Instance.ShowToast("Success: " + responseString, MSG_TYPE.INFO);
         }
     }
 
