@@ -19,3 +19,4 @@
 
 따라서, 유니티 클라이언트 안에서의 좋은 UX 등은 고려하지 않고, API가 정상적으로 동작하는지만 확실하게 체크하기 위함.
 
+<iframe width="1280" height="720" src="https://www.youtube.com/embed/LQAD5x1eF28" title="20241206 FutsalOnline Project 시연 영상" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
